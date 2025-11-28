@@ -1,5 +1,3 @@
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -31,7 +29,7 @@ public class PnjEditor : MonoBehaviour
         _pnj._pnjType = _currentTypes;
     }
 
-
+    // A Rework
     void SetGraphics()
     {
         if(_graphics == null)

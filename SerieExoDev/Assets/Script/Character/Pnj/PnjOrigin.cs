@@ -1,76 +1,46 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PnjOrigin : MonoBehaviour
+public abstract class PnjOrigin : MonoBehaviour
 {
     [HideInInspector]
     public int _pnjType;
 
-    public Vector3 targetPosition;
-
-    NavMeshAgent _agent;
-
+    protected NavMeshAgent _agent;
     [SerializeField]
-    public float _soundRadiusDetect;
-    [SerializeField]
-    public float _lookRadiusDetect;
+    protected Transform _player;
 
-    [HideInInspector]
-    Transform _player;
-    [SerializeField]
-    Vector3 _PositionPlayer;
+    [Header("Vision Settings")] public float _viewDistance = 10f;
+    public float _viewAngle = 60f;
+    public LayerMask _obstacleMask;
 
-
-
-
-    private void Start()
+    protected virtual void Start()
     {
-        if(_agent == null) _agent = GetComponent<NavMeshAgent>();
+        if (_agent == null) _agent = GetComponent<NavMeshAgent>();
+
+        _player = GameObject.Find("PLAYER").transform;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
-        //SoundDetectSphere();
-        ViewDetectSphere();
+        Comportement();
     }
 
-    public void SetDestination()
-    { 
-      if(ArrivedToDestination() == true)
-      {
+    protected abstract void Comportement();
 
-      }
-    }
-
-    bool ArrivedToDestination()
+    protected bool CanSeePlayer()
     {
-        return (transform.position - targetPosition).magnitude < 2f;
-    }
-    
-    void SoundDetectSphere()
-    {
-        if(Physics.CheckSphere(transform.position, _soundRadiusDetect, gameObject.layer = 6))
+        Vector3 dirToPlayer = (_player.position - transform.position).normalized;
+        if (Vector3.Angle(transform.forward, dirToPlayer) < _viewAngle / 2f)
         {
-            Gizmos.color = Color.green;   
+            float dist = Vector3.Distance(transform.position, _player.position);
+            if (!Physics.Raycast(transform.position, dirToPlayer, dist, _obstacleMask))
+            {
+                Debug.DrawLine(transform.position, _player.position,Color.green ,0.5f);
+                return true;
+            }
         }
-        else
-        {
-            Gizmos.color = Color.red;
-        }
-        Gizmos.DrawWireSphere(transform.position, _soundRadiusDetect);
+        return false;
     }
 
-    void ViewDetectSphere()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, _player.position - transform.position, out hit ,30f, gameObject.layer = 7))
-        {
-            Debug.DrawLine(transform.position, _player.position, Color.green, 0.5f);
-            _PositionPlayer = _player.position;
-        }
-        else
-        {
-            Debug.DrawLine(transform.position, hit.point, Color.red, 0.5f);
-        }
-    }
 }

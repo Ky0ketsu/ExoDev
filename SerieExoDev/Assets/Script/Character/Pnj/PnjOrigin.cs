@@ -19,6 +19,8 @@ public abstract class PnjOrigin : MonoBehaviour
         if (_agent == null) _agent = GetComponent<NavMeshAgent>();
 
         _player = GameObject.Find("PLAYER").transform;
+
+        _obstacleMask = ~0;
     }
 
     protected virtual void Update()

@@ -23,5 +23,10 @@ public class PuzzleManager : MonoBehaviour
         _puzzleSolved = true;
         Debug.Log("Puzzle réussi !");
         _door.OpenDoor();
+
+        foreach (var piece in _pieces)
+        {
+            piece.transform.GetComponent<ObjectRotator>()._isFinish = true;
+        }
     }
 }

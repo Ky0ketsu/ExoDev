@@ -16,6 +16,16 @@ public class SwitchToRotation : MonoBehaviour
 
     void Update()
     {
+        if (_currentRotator != null)
+        {
+            if (_currentRotator._isFinish)
+            {
+                ExitPuzzleMode();
+                _currentRotator = null;
+            }
+        }
+        
+
         if (!_isInPuzzle)
         {
             CheckForInteraction();
@@ -37,7 +47,7 @@ public class SwitchToRotation : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, _interactDistance, _interactLayer))
             {
                 ObjectRotator rot = hit.collider.GetComponent<ObjectRotator>();
-                if (rot != null)
+                if (rot != null && rot._isFinish == false)
                 {
                     EnterPuzzleMode(rot);
                 }

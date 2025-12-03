@@ -6,6 +6,7 @@ public class ObjectRotator : MonoBehaviour
     private bool _dragging = false;
 
     public bool _inPuzzle;
+    public bool _isFinish;
 
     void OnEnable()
     {
@@ -14,6 +15,7 @@ public class ObjectRotator : MonoBehaviour
 
     void Update()
     {
+        if (_isFinish) return;
         if (!_inPuzzle) return;
 
         if (Input.GetMouseButtonDown(0))
@@ -26,6 +28,11 @@ public class ObjectRotator : MonoBehaviour
         {
             float rotX = Input.GetAxis("Mouse X") * _rotationSpeed * Time.deltaTime;
             float rotY = -Input.GetAxis("Mouse Y") * _rotationSpeed * Time.deltaTime;
+
+            if (rotX < 0) rotX += 360;
+            else if (rotX > 360) rotX -= 360;
+            if (rotY < 0) rotY += 360;
+            else if (rotY > 360) rotY -= 360;
 
             transform.Rotate(Vector3.up, rotX, Space.World);
             transform.Rotate(Vector3.right, rotY, Space.World);

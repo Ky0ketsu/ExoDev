@@ -17,4 +17,18 @@ public class RotationCheck : MonoBehaviour
                Mathf.Abs(Mathf.DeltaAngle(current.y, _targetRotation.y)) <= _tolerance &&
                Mathf.Abs(Mathf.DeltaAngle(current.z, _targetRotation.z)) <= _tolerance;
     }
+
+    private void Update()
+    {
+        if (transform.GetComponent<ObjectRotator>()._isFinish == true)
+        {
+            PerfectRota();
+        }
+
+    }
+
+    public void PerfectRota()
+    {
+        transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, _targetRotation, Time.deltaTime * 2);
+    }
 }

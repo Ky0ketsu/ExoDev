@@ -9,6 +9,8 @@ public class PlayerView : MonoBehaviour
     float _xRota, _yRota;
     Vector3 _rotaWanted;
 
+    public bool _canView;
+
     //Ajouter un _canLook ***
 
     [SerializeField]
@@ -17,10 +19,13 @@ public class PlayerView : MonoBehaviour
     private void Start()
     {
         if (_speed <= 0) _speed = 10;
+        _canView = true;
     }
 
     private void Update()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        if(!_canView) return;
         WantedLook();
     }
 

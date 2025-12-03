@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
-    bool _canMove;
+    public bool _canMove;
 
     [SerializeField]
     float _speed;

@@ -16,6 +16,11 @@ public class PlayerView : MonoBehaviour
     [SerializeField]
     Transform _camera;
 
+    [HideInInspector]
+    private float _distance;
+    [HideInInspector]
+    private Vector3 _direction;
+
     private void Start()
     {
         if (_speed <= 0) _speed = 10;
@@ -26,7 +31,16 @@ public class PlayerView : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Confined;
         if(!_canView) return;
+        GetDistance();
         WantedLook();
+    }
+
+    void GetDistance()
+    {
+        _distance = Vector3.Distance(transform.position, _camera.position);
+        _direction = _camera.position - transform.position;
+
+        Debug.DrawRay(_camera.position, _direction, Color.green, 1f);
     }
 
     void WantedLook()

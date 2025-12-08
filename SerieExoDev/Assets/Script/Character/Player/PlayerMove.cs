@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -9,14 +10,25 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField]
     float _speed;
+    float _currentSpeed;
 
     float _xMove, _yMove;
     Vector3 _moveWanted;
+
+    [SerializeField]
+    private LayerMask _layerMask;
+
+    [HideInInspector]
+    CharacterController _controller;
 
     void Start()
     {
         _canMove = true;
         if (_speed <= 0) _speed = 10;
+        _currentSpeed = _speed;
+        if(GetComponent<CharacterController>()) _controller = GetComponent<CharacterController>();
+        else _controller = transform.AddComponent<CharacterController>();
+
     }
 
     void Update()
@@ -28,6 +40,13 @@ public class PlayerMove : MonoBehaviour
         }
 
         if(_canMove) SetMove();
+
+        IsRunning();
+    }
+
+    bool IsRunning()
+    {
+        return Input.GetButton("Run");
     }
 
     void SetMove()
@@ -35,7 +54,16 @@ public class PlayerMove : MonoBehaviour
         _xMove = Input.GetAxisRaw("Horizontal");
         _yMove = Input.GetAxisRaw("Vertical");
 
-        _moveWanted = (transform.forward * _yMove + transform.right * _xMove).normalized * _speed * Time.deltaTime;
+        if (IsRunning())
+        {
+            _currentSpeed = _speed * 1.7f;
+        }
+        else
+        {
+            _currentSpeed = _speed;
+        }
+
+            _moveWanted = (transform.forward * _yMove + transform.right * _xMove).normalized * _currentSpeed * Time.deltaTime;
 
         // ajouter un Lerp ***
 
@@ -44,6 +72,6 @@ public class PlayerMove : MonoBehaviour
 
     void ApplyMove()
     {
-        transform.position += _moveWanted;
+        _controller.Move(_moveWanted);
     }
 }
